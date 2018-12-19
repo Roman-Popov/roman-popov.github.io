@@ -1,0 +1,431 @@
+@import url('https://fonts.googleapis.com/css?family=Kanit');
+
+
+:local(.wrapper) {
+    --initialColor: #1d0066; // just to save this color for future use
+    --bgColor: #1d0066;
+    --logoColor: white;
+    --shadowColor: red;
+
+    --width: 100px;
+    --vwCalcSize: var(--width);
+    --rectangleWidth: calc(var(--vwCalcSize) * 0.866);     /* 0.866 = cos(60deg) */
+    --rectangleHeight: calc(var(--vwCalcSize) * 0.5);     /* 0.5 = cos(30deg) */
+    --diameter: calc(var(--vwCalcSize) * 0.91);
+    // --fontSize: calc(var(--vwCalcSize) / 5);
+    --fontSize: calc(var(--vwCalcSize) * 0.25);
+
+    width: var(--width);
+    height: var(--width);
+    max-width: 100vw;
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 0;
+    font-family: Arial, Helvetica, sans-serif;
+
+    &:local(.tiny) {
+        width: var(--width);
+        height: calc(var(--width) * 0.77);
+
+        &:local(.anim) {
+            transition: width 0.25s linear;
+
+            &:hover {
+                width: calc(var(--vwCalcSize) / 0.77 * 3.75 );
+            }
+        }
+
+        &:local(.long) {
+            width: calc(var(--width) * 3.75);
+        }
+    }
+
+    :local(.resize-detector) {
+        transition: all 0.001s;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: inherit; /* detect direct --width change */
+        width: var(--vwCalcSize); /* detect resize */
+        transform: scale(0);
+    }
+
+    :local(.logo) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Kanit', sans-serif;
+        text-decoration: none;
+        color: black;
+        position: relative;
+        background-color: var(--bgColor);
+        height: var(--rectangleHeight);
+        width: var(--rectangleWidth);
+        z-index: unset;
+        -webkit-tap-highlight-color: transparent;
+
+        @mixin scale-circle() {
+            transform: scale(0.9);
+            box-shadow: 0 0 calc(var(--rectangleHeight) * 0.75) var(--shadowColor);
+        }
+
+        @mixin expand-description() {
+            transform: scaleX(1);
+            transition: transform 0.15s 0.6s;
+        }
+
+        &:hover {
+            &::before {
+                @include scale-circle();
+                transition: transform 0.25s 0.1s, box-shadow 0.15s 0.6s;
+            }
+
+            &::after {
+                @include expand-description();
+            }
+        }
+
+        &.focused,
+        &:focus {
+            &::before {
+                @include scale-circle();
+                transition: transform 0.15s, box-shadow 0.15s;
+            }
+        }
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: unset;
+            right: unset;
+            bottom: unset;
+            left: unset;
+            z-index: -1;
+            width: var(--diameter);
+            height: var(--diameter);
+            background-color: inherit;
+            border-radius: 50%;
+            padding: 0;
+            box-shadow: none;
+            transition: transform 0.25s 0.25s, box-shadow 0.5s;
+        }
+
+        &::after {
+            content: 'WEB DEVELOPER';
+            display: flex;
+            align-items: center;
+            font-size: calc(var(--fontSize) * 0.48);
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            text-shadow: var(--logoColor) 0 0 1em, var(--logoColor) 0 0 1em,
+                         var(--logoColor) 0 0 1em, var(--logoColor) 0 0 1em;
+            text-align: left;
+            left: 100%;
+            padding-left: 15%;
+            position: absolute;
+            z-index: -1;
+            color: var(--bgColor);
+            overflow: hidden;
+            transform-origin: 0;
+            transform: scaleX(0);
+            transition: transform 0.25s;
+        }
+
+        &:local(.tiny) {
+            width: 100%;
+            height: 100%;
+            transition: box-shadow 0.5s;
+
+            &:hover,
+            &:focus,
+            &.focused {
+                box-shadow: 0 0 calc(var(--vwCalcSize) * 0.2) var(--shadowColor);
+            }
+
+            &::before {
+                content: none;
+            }
+
+            :local(.hex-corner) {
+                transform: none;
+            }
+
+            :local(.letter) {
+                top: 0;
+                height: 100%;
+                --borderWidth: calc(var(--vwCalcSize) / 15);
+
+                &:first-of-type {
+                    left: 0;
+                    width: 50%;
+                }
+
+                &:last-of-type {
+                    width: calc(50% + var(--borderWidth));
+                }
+
+                :local(.text) {
+                    font-size: calc(var(--fontSize) * 2.5);
+                }
+            }
+
+            &:local(.anim) {
+                :local(.letter) {
+                    :local(.name) {
+                        transition-duration: 0.2s;
+                    }
+
+                    &:first-of-type {
+                        width: calc(var(--vwCalcSize) / 0.77 / 2);
+                        transition: width 0.125s 0.125s linear;
+                    }
+
+                    &:last-of-type {
+                        left: calc(var(--vwCalcSize) / 0.77 / 2 - var(--borderWidth));
+                        width: calc(var(--vwCalcSize) / 0.77 / 2 + var(--borderWidth));
+                        transition: width 0.125s linear, left 0.125s 0.125s linear;
+                    }
+                }
+
+                &:hover {
+                    :local(.letter) {
+                        :local(.name) {
+                            max-width: 100%;
+                        }
+
+                        &:first-of-type {
+                            width: calc(var(--vwCalcSize) / 0.77 * 3.75 / 2);
+                            transition: width 0.125s linear;
+
+                            :local(.name) {
+                                transition-delay: 0.1s;
+                            }
+                        }
+
+                        &:last-of-type {
+                            left: calc(var(--vwCalcSize) / 0.77 * 3.75 / 2 - var(--borderWidth));
+                            width: calc(var(--vwCalcSize) / 0.77 * 3.75 / 2 + var(--borderWidth));
+                            transition: width 0.125s 0.125s linear, left 0.125s linear;
+
+                            :local(.name) {
+                                transition-delay: 0.2s;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &:local(.long) {
+                :local(.letter) {
+                    :local(.name) {
+                        max-width: 100%;
+                    }
+
+                    &:first-of-type {
+                        width: calc(var(--vwCalcSize) / 0.77 * 3.75 / 2);
+                    }
+
+                    &:last-of-type {
+                        left: calc(var(--vwCalcSize) / 0.77 * 3.75 / 2 - var(--borderWidth));
+                        width: calc(var(--vwCalcSize) / 0.77 * 3.75 / 2 + var(--borderWidth));
+                    }
+                }
+            }
+        }
+
+        &:local(.tiny),
+        &:local(.small),
+        &:local(.medium) {
+            &::after {
+                content: none;
+            }
+        }
+
+        &:local(.big) {
+            margin-left: calc(0px - var(--diameter));
+
+            &::after {
+                @include expand-description();
+            }
+        }
+
+        :local(.hex-corner) {
+            z-index: -1;
+            box-sizing: border-box;
+            background-color: inherit;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        :local(.hex-pt1) {
+            transform: rotate(60deg);
+        }
+
+        :local(.hex-pt2) {
+            transform: rotate(-60deg);
+        }
+
+        :local(.letter) {
+            --borderWidth: calc(var(--rectangleHeight) / 20);
+            position: absolute;
+            top: 10%;
+            margin: 0;
+            border: var(--borderWidth) solid var(--logoColor);
+            box-sizing: border-box;
+            height: 80%;
+            width: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: top 0.25s 0.5s, height 0.25s 0.5s, left 0.25s 0.25s, width 0.25s;
+
+            &:first-of-type {
+                left: 20%;
+                background: var(--logoColor);
+                color: var(--bgColor);
+            }
+
+            &:last-of-type {
+                width: calc(30% + var(--borderWidth));
+                left: calc(50% - var(--borderWidth));
+                color: var(--logoColor);
+                box-shadow: inset 0 0 0 var(--vwCalcSize) var(--bgColor);
+            }
+
+            :local(.text) {
+                display: flex;
+                justify-content: center;
+                font-size: var(--fontSize);
+                user-select: none;
+                transition: font-size 0.25s 0.5s;
+
+                :local(.name) {
+                    max-width: 0;
+                    overflow: hidden;
+                    transition: max-width 0.25s;
+                }
+            }
+        }
+
+        &:local(:not(.small):not(.tiny):hover),
+        &:local(.big) {
+            :local(.letter) {
+                width: 60%;
+                height: 50%;
+                transition: top 0.25s, height 0.25s, left 0.25s 0.25s, width 0.25s 0.5s;
+
+                &:first-of-type {
+                    top: 0;
+                }
+
+                &:last-of-type {
+                    top: calc(50% - var(--borderWidth));
+                    height: calc(50% + var(--borderWidth));
+                    left: 20%;
+                }
+
+                :local(.text) {
+                    font-size: calc(var(--fontSize) * 0.52);
+                    transition: font-size 0.25s;
+
+                    :local(.name) {
+                        max-width: 100%;
+                        transition: max-width 0.25s 0.75s;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// for avoid "animation-jumping" in case of --width was set by relative value
+:local(.wrapper):not([data-init="true"]) {
+    %remove-transition {
+        transition: none;
+    }
+
+    &:local(.tiny.anim) {
+        @extend %remove-transition;
+    }
+
+    :local(.logo) {
+        &:hover {
+            &::before,
+            &::after {
+                @extend %remove-transition;
+            }
+        }
+
+        &.focused,
+        &:focus {
+            &::before {
+                @extend %remove-transition;
+            }
+        }
+
+        &::before,
+        &::after {
+            @extend %remove-transition;
+        }
+
+        &:local(.tiny) {
+            @extend %remove-transition;
+
+            :local(.letter .text) {
+                @extend %remove-transition;
+            }
+
+            &:local(.anim),
+            &:local(.anim):hover {
+                :local(.letter) {
+                    &:first-of-type,
+                    &:last-of-type,
+                    :local(.name) {
+                        @extend %remove-transition;
+                    }
+                }
+            }
+        }
+
+        &:local(.big)::after  {
+            @extend %remove-transition;
+        }
+
+        :local(.letter) {
+            @extend %remove-transition;
+
+            :local(.text) {
+                @extend %remove-transition;
+
+                :local(.name) {
+                    @extend %remove-transition;
+                }
+            }
+        }
+
+        &:local(:not(.small):not(.tiny):hover),
+        &:local(.big) {
+            :local(.letter) {
+                @extend %remove-transition;
+
+                :local(.text) {
+                    @extend %remove-transition;
+
+                    :local(.name) {
+                        @extend %remove-transition;
+                    }
+                }
+            }
+        }
+    }
+}
