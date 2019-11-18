@@ -5,7 +5,7 @@ import Logo from './Logo';
 class Intro extends Component {
 
     state = {
-        available: true,
+        available: false,
         orientationTrigger: window.matchMedia('(orientation:landscape)'),
         logoChangeTypeTrigger: window.matchMedia('(max-width: 750px) and (min-aspect-ratio: 1/2)'),
         logoChangeType: window.matchMedia('(max-width: 750px) and (min-aspect-ratio: 1/2)').matches
